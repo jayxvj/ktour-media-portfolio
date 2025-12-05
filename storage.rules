@@ -1,0 +1,29 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Images folder - for portfolio photos
+    match /images/{imageId} {
+      // Anyone can read images (for public display)
+      allow read: if true;
+      
+      // Only authenticated admins can upload/delete
+      allow write, delete: if isAuthenticated();
+    }
+    
+    // Videos folder - for portfolio videos
+    match /videos/{videoId} {
+      // Anyone can read videos (for public display)
+      allow read: if true;
+      
+      // Only authenticated admins can upload/delete
+      allow write, delete: if isAuthenticated();
+    }
+  }
+}
